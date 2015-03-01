@@ -1,7 +1,7 @@
 {
   "name": "sideloadify",
   "version": "0.1.0",
-  "description": "Easily move inline JSON structures to separate objects. Typically used to refine JSON responses",
+  "description": "Easily move inline JSON structures to separate objects. Typically used to refine JSON responses.",
   "private": true,
   "directories": {
     "test": "specs"
@@ -9,13 +9,23 @@
   "scripts": {
     "test": "jasmine-node spec/*"
   },
-  "repository": "",
+  "repository": "https://github.com/kbjorklid/sideloadify",
   "engines": {
-    "node": ">= 0.10.0"
+    "node": ">= 0.10.0",
+    "iojs": ">= 1.0.0"
   },
-  "author": "Kalle Björklid",
+  "author": {
+    "name": "Kalle Björklid",
+    "email": "kalle.bjorklid@gmail.com"
+  },
   "license": "MIT",
   "dependencies": {
     "lodash": "^3.3.1"
-  }
+  },
+  "keywords" : [
+    "json",
+    "rest",
+    "sideload",
+    "ember data"
+  ]
 }
