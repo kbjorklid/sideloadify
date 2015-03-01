@@ -1,0 +1,21 @@
+{
+  "name": "sideloadify",
+  "version": "0.1.0",
+  "description": "Easily move inline JSON structures to separate objects. Typically used to refine JSON responses",
+  "private": true,
+  "directories": {
+    "test": "specs"
+  },
+  "scripts": {
+    "test": "jasmine-node spec/*"
+  },
+  "repository": "",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "author": "Kalle Björklid",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^3.3.1"
+  }
+}
