@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Easily move inline JSON structures to separate objects. Typically used to refine JSON responses.",
   "private": true,
+  "main" : "index.js",
   "directories": {
     "test": "specs"
   },
