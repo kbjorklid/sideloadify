@@ -220,3 +220,40 @@ result:
   ]
 }
 ```
+
+### Single object sideload
+
+```javascript
+var employee = {
+  "id": 1
+  "name": "John Snow",
+  "employer": {
+    "id": 1,
+    "name" : "Night's Watch"
+  }
+};
+
+var config = {
+    wrapper: { singular: "employee", plural: "employees" },
+    sideloading: [
+        { property: "employer", idAttribute: "id", as: "employers" }
+    ]
+};
+
+var result = sideloadify(book, config);
+```
+
+result:
+
+```javascript
+{
+    "employee": {
+        "id": 1,
+        "name": "John Snow",
+        "employer": 1;
+    },
+    "employers": [
+       { "id" : 1, "name": "Night's Watch" }
+    ]
+}
+```
