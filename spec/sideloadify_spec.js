@@ -74,7 +74,7 @@ describe("sideloadify", function (){
         });
         expect(result).toEqual({
             wrapperArray : testObjectArray
-        })
+        });
     });
 
     it("should correctly move child objects to sideloads from array", function() {
@@ -174,5 +174,27 @@ describe("sideloadify", function (){
             ]
         })
 
+    });
+
+    it("should handle single inline objects correctly", function () {
+        var testObj = {
+            name : "Foo",
+            child : {
+                id : 1,
+                title : "Bar"
+            }
+        };
+        var result = sideloadify(testObj, {
+            wrapper: { singular : 'root', plural : 'WRONG' },
+            sideloading: [
+                { property : 'child', idAttribute : 'id', as: 'children'},
+            ]
+        });
+        expect(result).toEqual({
+            root: { name: "Foo", child: 1 },
+            children: [
+                { id : 1, title : "Bar" }
+            ]
+        });
     });
 });

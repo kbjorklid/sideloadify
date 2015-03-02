@@ -44,7 +44,7 @@ var book = {
   "id": 1
   "title": "Foo",
   "chapters": [
-     { "id" : 1, "title": "First chapter" }
+     { "id" : 1, "title": "First chapter" },
      { "id" : 2, "title": "Second chapter" }
   ]
 };
@@ -69,7 +69,7 @@ result:
         "chapters": [1, 2];
     },
     "chapters": [
-       { "id" : 1, "title": "First chapter" }
+       { "id" : 1, "title": "First chapter" },
        { "id" : 2, "title": "Second chapter" }
     ]
 }
@@ -85,7 +85,7 @@ var book = {
     { "id": 2, "name" : "Ned Stark"}
   ]
   "chapters": [
-    { "id": 1, "title": "First chapter" }
+    { "id": 1, "title": "First chapter" },
     { "id": 2, "title": "Second chapter" }
   ]
 };
@@ -93,7 +93,7 @@ var book = {
 var config = {
     wrapper: { singular: "book", plural: "books" },
     sideloading: [
-      { property: "chapters", idAttribute: "id", as: "chapters" }
+      { property: "chapters", idAttribute: "id", as: "chapters" },
       { property: "authors", idAttribute: "id", as: "persons" }
     ]
 };
@@ -111,11 +111,11 @@ result:
     "chapters": [1, 2];
   },
   "chapters": [
-    { "id" : 1, "title": "First chapter" }
+    { "id" : 1, "title": "First chapter" },
     { "id" : 2, "title": "Second chapter" }
   ],
   "persons": [
-    { "id" : 1, "name": "John Snow" }
+    { "id" : 1, "name": "John Snow" },
     { "id" : 2, "name": "Ned Stark" }
   ]
 }
@@ -129,7 +129,7 @@ var dealerships = [
     "id": 1
     "name": "Bob's cars",
     "makes": [
-      { "id" : 1, "name": "Fiat" }
+      { "id" : 1, "name": "Fiat" },
       { "id" : 2, "name": "Volvo" }
     ]
   },
@@ -137,7 +137,7 @@ var dealerships = [
     "id": 2
     "name": "Dan's vagons",
     "makes": [
-      { "id" : 2, "name": "Volvo" }
+      { "id" : 2, "name": "Volvo" },
       { "id" : 3, "name": "Porche" }
     ]
   }
@@ -170,8 +170,8 @@ result:
     }
   ],
   "carMakes": [
-    { "id" : 1, "name": "Fiat" }
-    { "id" : 2, "name": "Volvo" }
+    { "id" : 1, "name": "Fiat" },
+    { "id" : 2, "name": "Volvo" },
     { "id" : 3, "name": "Porche" }
   ]
 }
@@ -195,7 +195,7 @@ var book = {
 var config = {
     wrapper: { singular: "book", plural: "books" },
     sideloading: [
-      { property: "authors", idAttribute: "id", as: "persons" }
+      { property: "authors", idAttribute: "id", as: "persons" },
       { property: "editors", idAttribute: "id", as: "persons" }
     ]
 };
@@ -214,8 +214,8 @@ result:
     "editors": [3];
   },
   "persons": [
-    { "id" : 1, "name": "John Snow" }
-    { "id" : 2, "name": "Ned Stark" }
+    { "id" : 1, "name": "John Snow" },
+    { "id" : 2, "name": "Ned Stark" },
     { "id" : 3, "name": "Catelyn Stark" }
   ]
 }
