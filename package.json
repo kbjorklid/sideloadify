@@ -1,7 +1,7 @@
 {
   "name": "sideloadify",
   "version": "0.1.0",
-  "description": "Easily move inline JSON structures to separate objects. Typically used to refine JSON responses.",
+  "description": "Easily move inline JSON structures to separate objects. Typically used to refine REST responses.",
   "private": false,
   "main" : "index.js",
   "directories": {
