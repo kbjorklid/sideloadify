@@ -1,9 +1,9 @@
 {
   "name": "sideloadify",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Easily move inline JSON structures to separate objects. Typically used to refine REST responses.",
   "private": false,
-  "main" : "index.js",
+  "main": "index.js",
   "directories": {
     "test": "specs"
   },
@@ -23,7 +23,7 @@
   "dependencies": {
     "lodash": "^3.3.1"
   },
-  "keywords" : [
+  "keywords": [
     "json",
     "rest",
     "sideload",
