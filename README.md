@@ -28,12 +28,31 @@ var result = sideloadify(target, config);
 * ```wrapper``` contains the name for the property of the root object or array.
   * The value of the ```singular``` property is used if the root is an object
   * The value of the ```plural``` property is used if the root is an array
-* ```sideloading``` is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads..
+* ```sideloading``` (optional) is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads.
   * ```property``` defines the name of the property of the sideload array. This may be a property path, e.g. ```user.roles```.
   * ```idAttribute``` contains the name of the id of the inline object. The value of this attribute will replace the inline object.
-  * ```as```  defines the name of the property of the sideload array. If left undefined, the sideloads will not be added (only replace the inline objects with IDs).
+  * ```as``` (optional)  defines the name of the property of the sideload array. If left undefined, the sideloads will not be added (only replace the inline objects with IDs).
+* ```delete``` (optional) is an array or a single string specifying the property path or property paths which should be deleted from the original object before other processing takes place.
 
-The way configuration works and the capabilities are best demonstrated through the following examples
+### Property paths
+The property paths refer to a notation to identify the properties. See examples below
+
+Given the JSON object
+```javascript
+{
+  "id": 1,
+  "metadata": { "publisher": "Acme Co.", "isbn": "9783832791629" },
+  "chapters": [
+    { "id" : 1, "title": "First chapter" },
+    { "id" : 2, "title": "Second chapter" }
+  ]
+}
+```
+some of the property paths and their respective values would be:
+* ```id``` : ```1```
+* ```metadata.publisher``` : ```"Acme Co."```
+* ```chapters.title``` : ```["First chapter", "Second chapter"]```
+
 
 ## Examples
 
