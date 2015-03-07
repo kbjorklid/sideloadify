@@ -274,4 +274,114 @@ describe("sideloadify", function (){
             ]
         });
     });
+
+    it("should successfully delete simple properties", function () {
+        var testObj = {
+            id: 1,
+            name : "Foo"
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper'},
+            delete: ['name']
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1
+            }
+        });
+    });
+
+    it("should successfully delete nested properties", function () {
+        var testObj = {
+            id: 1,
+            nested: {
+                name : "Foo",
+                name2 : "Bar"
+            }
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper'},
+            delete: ['nested.name']
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                nested: {
+                    name2: "Bar"
+                }
+            }
+        });
+    });
+
+    it("should successfully delete properties inside array", function () {
+        var testObj = {
+            id: 1,
+            arr: [
+                {
+                    x: "y",
+                    target : "Foo"
+                },
+                {
+                    z: "x",
+                    target : "Bar"
+                }
+            ]
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper'},
+            delete: ['arr.target']
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                arr: [
+                    { x: "y"},
+                    { z: "x"}
+                ]
+            }
+        })
+    });
+
+    it("should successfully delete properties inside sideloadified objects", function () {
+        var testObj = {
+            id : 1,
+            children: [
+                { id: 1, name: "child 1", target: "foo"},
+                { id: 2, name: "child 2", target: "bar"}
+            ]
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper'},
+            sideloading: {property: 'children', idAttribute: 'id', as: 'children'},
+            delete: ['children.target']
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                children: [1, 2]
+            },
+            children: [
+                { id: 1, name: "child 1"},
+                { id: 2, name: "child 2"}
+            ]
+        })
+    });
+
+    it("should ignore non-existent properties when deleting", function () {
+        var testObj = {
+            id: 1,
+            name: "foo"
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper' },
+            delete: ['target']
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                name: "foo"
+            }
+        });
+
+    });
 });

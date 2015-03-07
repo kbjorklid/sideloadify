@@ -1,6 +1,7 @@
 var _ = require('lodash'),
     objectUtils = require('./lib/objectUtils');
 
+
 /**
  * Returns a sideloadified copy of the target object
  * <p>
@@ -42,43 +43,42 @@ var _ = require('lodash'),
  * @returns {Object} sideloadified copy of target
  */
 module.exports = function sideloadify(target, options) {
-    var inputClone, inputAsArray, sideloads, results, mainPropertyName, inputIsArray, sideloadSpecs;
+    var inputClone, inputAsArray, sideloadContainer, results, mainPropertyName, inputIsArray, sideloadSpecs;
     sortSideloads(options);
     inputIsArray = _.isArray(target);
     inputClone = _.cloneDeep(target);
-    inputAsArray = (inputIsArray) ? inputClone : [ inputClone ];
+    inputAsArray = toArray(inputClone);
+    deleteProps(inputAsArray, options.delete);
     mainPropertyName = (!inputIsArray) ? options.wrapper.singular : options.wrapper.plural;
-    sideloads = {};
-    sideloadSpecs = asArray(options.sideloading);
-    _.forEach(sideloadSpecs, function (sideloadOpts){
-        var tmp, sideloadArray = [];
-        _.forEach(inputAsArray, function (model) {
-            tmp = extractSideloaded(model, sideloadOpts);
-            if (tmp && tmp.length > 0) {
-                sideloadArray = sideloadArray.concat(tmp);
-            }
-        });
-        if (sideloadArray.length > 0 && sideloadOpts.as) {
-            tmp = sideloads[sideloadOpts.as];
-            tmp = (tmp) ? tmp.concat(sideloadArray) : sideloadArray;
-            tmp && (sideloads[sideloadOpts.as] = tmp);
-        }
+    sideloadContainer = {};
+    sideloadSpecs = toArray(options.sideloading);
+    _.forEach(sideloadSpecs, function (sideloadOpts) {
+        extractSingleSideload(inputAsArray, sideloadOpts, sideloadContainer);
     });
     _.forEach(sideloadSpecs, function(opts, key) {
-        if (sideloads[opts.as]) {
-            sideloads[opts.as] = removeDuplicatesById(sideloads[opts.as], opts.idAttribute);
+        if (sideloadContainer[opts.as]) {
+            sideloadContainer[opts.as] = removeDuplicatesById(sideloadContainer[opts.as], opts.idAttribute);
         }
     });
     results = {};
     results[mainPropertyName] = (inputAsArray.length === 1 && !inputIsArray) ? inputAsArray[0] : inputAsArray;
-    _.assign(results, sideloads);
+    _.assign(results, sideloadContainer);
     return results;
 };
 
-function asArray(input) {
-    if (input === undefined) return undefined;
-    if (_.isArray(input)) return input;
-    return [ input ];
+function extractSingleSideload(inputAsArray, sideloadOpts, sideloadContainer) {
+    var tmp, sideloadArray = [];
+    _.forEach(inputAsArray, function (model) {
+        tmp = extractSideloaded(model, sideloadOpts);
+        if (tmp && tmp.length > 0) {
+            sideloadArray = sideloadArray.concat(tmp);
+        }
+    });
+    if (sideloadArray.length > 0 && sideloadOpts.as) {
+        tmp = sideloadContainer[sideloadOpts.as];
+        tmp = (tmp) ? tmp.concat(sideloadArray) : sideloadArray;
+        tmp && (sideloadContainer[sideloadOpts.as] = tmp);
+    }
 }
 
 function removeDuplicatesById(targetArray, idAttrPath) {
@@ -114,4 +114,21 @@ function sortSideloads(spec) {
         }
         return 0;
     });
+}
+
+function deleteProps(targetArray, propsToDelete) {
+    if (propsToDelete) {
+        targetArray.forEach(function (target) {
+            objectUtils.forEachProperty(target, propsToDelete, function (value, parent, lastPropertyName) {
+                delete parent[lastPropertyName];
+            })
+        })
+    }
+}
+
+function toArray(target, undefinedVal) {
+    if (target === undefined) {
+        return undefinedVal;
+    }
+    return (_.isArray(target)) ? target : [ target ];
 }
