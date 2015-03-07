@@ -234,8 +234,8 @@ describe("sideloadify", function (){
         var result = sideloadify(nestedObjects, {
             wrapper: { singular : 'root', plural : 'WRONG' },
             sideloading: [
-                { property : 'children.grandchildren', idAttribute : 'gid', as: 'grandchildren'},
-                { property : 'children', idAttribute : 'cid', as: 'children'}
+                { property : 'children', idAttribute : 'cid', as: 'children'},
+                { property : 'children.grandchildren', idAttribute : 'gid', as: 'grandchildren'}
             ]
         });
         expect(result).toEqual({

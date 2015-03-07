@@ -43,6 +43,7 @@ var _ = require('lodash'),
  */
 module.exports = function sideloadify(target, options) {
     var inputClone, inputAsArray, sideloads, results, mainPropertyName, inputIsArray, sideloadSpecs;
+    sortSideloads(options);
     inputIsArray = _.isArray(target);
     inputClone = _.cloneDeep(target);
     inputAsArray = (inputIsArray) ? inputClone : [ inputClone ];
@@ -97,4 +98,20 @@ function removeDuplicatesById(targetArray, idAttrPath) {
 
 function extractSideloaded(fromJson, settings) {
     return objectUtils.replaceWithIdArray(fromJson, settings['property'], settings['idAttribute']);
+}
+
+// Need to make sure the most deeply nested sideloads are extracted before less deeply nested. This
+// can be ensured by sorting sideload specs by the property path length
+function sortSideloads(spec) {
+    if (!spec.sideloading || !spec.sideloading.length || spec.sideloading.length <= 1) {
+        return;
+    }
+    spec.sideloading.sort(function (a, b) {
+        if (a.property.length > b.property.length) {
+            return -1;
+        } else if (a.property.length < b.property.length) {
+            return 1;
+        }
+        return 0;
+    });
 }
