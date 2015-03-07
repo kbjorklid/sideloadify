@@ -60,6 +60,66 @@ describe("sideloadify", function (){
         expect(result).toEqual({ wrapperArray: [] });
     });
 
+    it("should not create an empty sideload array", function () {
+        var input = {
+            id: 1,
+            children: []
+        };
+        var opts = {
+            wrapper: { singular : 'wrap', plural: 'WRONG' },
+            sideloading: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
+        }
+        expect(sideloadify(input, opts)).toEqual({
+            wrap : {
+                id: 1,
+                children: []
+            }
+        });
+    });
+
+    it("should ignore not found sideloads", function () {
+        var input = {
+            id: 1
+        };
+        var opts = {
+            wrapper: { singular : 'wrap', plural: 'WRONG' },
+            sideloading: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
+        }
+        expect(sideloadify(input, opts)).toEqual({
+            wrap : {
+                id: 1
+            }
+        });
+    });
+
+    it("should wrap objects without defining plural wrapper name", function () {
+        var input = {
+            id : 1
+        };
+        var opts = {
+            wrapper: { singular : 'wrap'}
+        };
+        expect(sideloadify(input, opts)).toEqual({
+            wrap : {
+                id: 1
+            }
+        });
+    });
+
+    it("should wrap arrays without defining singular wrapper name", function () {
+        var input = [
+            {id : 1}
+        ];
+        var opts = {
+            wrapper: { plural : 'wraps'}
+        };
+        expect(sideloadify(input, opts)).toEqual({
+            wraps : [{
+                id: 1
+            }]
+        });
+    });
+
     var testObjectArray = [{
         property : 100,
         foos : [ { fid : 1, text : "one" }, { fid : 2, text : "two" } ]
