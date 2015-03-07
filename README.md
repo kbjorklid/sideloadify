@@ -219,6 +219,67 @@ result:
 }
 ```
 
+### Nested sideloads
+
+```javascript
+var nestedObjects = {
+    name: "root",
+    children : [
+        {
+            cid: 1,
+            name : "child1",
+            grandchildren: [
+                {
+                    gid: 1,
+                    title : "grandChild1"
+                }
+            ]
+        },
+        {
+            cid: 2,
+            name : "child2",
+            grandchildren: [
+                {
+                    gid: 2,
+                    title : "grandChild2"
+                },
+                {
+                    gid: 3,
+                    title : "grandChild3"
+                }
+            ]
+        }
+    ]
+};
+
+var config = {
+    wrapper: { singular : 'root' },
+    sideloading: [
+        { property : 'children', idAttribute : 'cid', as: 'children'},
+        { property : 'children.grandchildren', idAttribute : 'gid', as: 'grandchildren'}
+    ]
+};
+
+var result = sideloadify(book, config);
+```
+
+result:
+```javascript
+{
+    root: { name: "root", children: [1, 2] },
+    children: [
+        { cid: 1, name: "child1", grandchildren: [1] },
+        { cid: 2, name: "child2", grandchildren: [2, 3] }
+    ],
+    grandchildren: [
+        { gid: 1, title: "grandChild1" },
+        { gid: 2, title: "grandChild2" },
+        { gid: 3, title: "grandChild3" }
+    ]
+}
+```
+
+
 ### Single object sideload
 
 ```javascript
