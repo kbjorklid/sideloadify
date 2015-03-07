@@ -42,13 +42,14 @@ var _ = require('lodash'),
  * @returns {Object} sideloadified copy of target
  */
 module.exports = function sideloadify(target, options) {
-    var inputClone, inputAsArray, sideloads, results, mainPropertyName, inputIsArray;
+    var inputClone, inputAsArray, sideloads, results, mainPropertyName, inputIsArray, sideloadSpecs;
     inputIsArray = _.isArray(target);
     inputClone = _.cloneDeep(target);
     inputAsArray = (inputIsArray) ? inputClone : [ inputClone ];
     mainPropertyName = (!inputIsArray) ? options.wrapper.singular : options.wrapper.plural;
     sideloads = {};
-    _.forEach(options.sideloading, function (sideloadOpts){
+    sideloadSpecs = asArray(options.sideloading);
+    _.forEach(sideloadSpecs, function (sideloadOpts){
         var tmp, sideloadArray = [];
         _.forEach(inputAsArray, function (model) {
             tmp = extractSideloaded(model, sideloadOpts);
@@ -62,7 +63,7 @@ module.exports = function sideloadify(target, options) {
             tmp && (sideloads[sideloadOpts.as] = tmp);
         }
     });
-    _.forEach(options.sideloading, function(opts, key) {
+    _.forEach(sideloadSpecs, function(opts, key) {
         if (sideloads[opts.as]) {
             sideloads[opts.as] = removeDuplicatesById(sideloads[opts.as], opts.idAttribute);
         }
@@ -72,6 +73,12 @@ module.exports = function sideloadify(target, options) {
     _.assign(results, sideloads);
     return results;
 };
+
+function asArray(input) {
+    if (input === undefined) return undefined;
+    if (_.isArray(input)) return input;
+    return [ input ];
+}
 
 function removeDuplicatesById(targetArray, idAttrPath) {
     var id,
