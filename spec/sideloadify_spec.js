@@ -51,6 +51,23 @@ describe("sideloadify", function (){
 
     });
 
+    it("should correctly sideload with single object as sideload def", function () {
+        var testobject = {
+            id: 1,
+            children: [
+                { id: 1, child: "barney" }
+            ]
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper', plural: 'wrong'},
+            sideloading: { property: 'children', idAttribute: 'id', as: 'sideloads' }
+        };
+        expect(sideloadify(testobject, spec)).toEqual({
+            wrapper: { id : 1, children : [1] },
+            sideloads: [ {id: 1, child: "barney" } ]
+        });
+    });
+
 
     it("should wrap an empty array correctly", function () {
         var result = sideloadify([], {

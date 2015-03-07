@@ -28,7 +28,7 @@ var result = sideloadify(target, config);
 * ```wrapper``` contains the name for the property of the root object or array.
   * The value of the ```singular``` property is used if the root is an object
   * The value of the ```plural``` property is used if the root is an array
-* ```sideloading``` is an array of definitions for how to extract inline objects and wrap them as sideloads.
+* ```sideloading``` is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads..
   * ```property``` defines the name of the property of the sideload array. This may be a property path, e.g. ```user.roles```.
   * ```idAttribute``` contains the name of the id of the inline object. The value of this attribute will replace the inline object.
   * ```as```  defines the name of the property of the sideload array. If left undefined, the sideloads will not be added (only replace the inline objects with IDs).
@@ -51,9 +51,7 @@ var book = {
 
 var config = {
     wrapper: { singular: "book", plural: "books" },
-    sideloading: [
-        { property: "chapters", idAttribute: "id", as: "chapters" }
-    ]
+    sideloading: { property: "chapters", idAttribute: "id", as: "chapters" }
 };
 
 var result = sideloadify(book, config);
