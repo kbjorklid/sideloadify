@@ -15,7 +15,7 @@ var sideloadify = require('sideloadify');
 // configuration:
 var sideloadConfig = {
     wrapper: { singular: 'book', plural: 'books' },
-    sideloading: [
+    sideloads: [
         { property: 'chapters', idAttribute: 'id', as: 'chapters' }
     ]
 };
@@ -28,7 +28,7 @@ var result = sideloadify(target, config);
 * ```wrapper``` contains the name for the property of the root object or array.
   * The value of the ```singular``` property is used if the root is an object
   * The value of the ```plural``` property is used if the root is an array
-* ```sideloading``` (optional) is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads.
+* ```sideloads``` (optional) is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads.
   * ```property``` defines the [property path](#property-paths) the target to sideload.
   * ```idAttribute``` contains the name of the id of the inline object. The value of this attribute will replace the inline object.
   * ```as``` (optional)  defines the name of the property of the sideload array. If left undefined, the sideloads will not be added (only replace the inline objects with IDs).
@@ -82,7 +82,7 @@ var book = {
 
 var config = {
     wrapper: { singular: "book", plural: "books" },
-    sideloading: { property: "chapters", idAttribute: "id", as: "chapters" }
+    sideloads: { property: "chapters", idAttribute: "id", as: "chapters" }
 };
 
 var result = sideloadify(book, config);
@@ -121,7 +121,7 @@ var book = {
 
 var config = {
     wrapper: { singular: "book", plural: "books" },
-    sideloading: [
+    sideloads: [
       { property: "chapters", idAttribute: "id", as: "chapters" },
       { property: "authors", idAttribute: "id", as: "persons" }
     ]
@@ -174,7 +174,7 @@ var dealerships = [
 
 var config = {
     wrapper: { singular: "dealership", plural: "dealerships" },
-    sideloading: [
+    sideloads: [
         { property: "makes", idAttribute: "id", as: "carMakes" }
     ]
 };
@@ -223,7 +223,7 @@ var book = {
 
 var config = {
     wrapper: { singular: "book", plural: "books" },
-    sideloading: [
+    sideloads: [
       { property: "authors", idAttribute: "id", as: "persons" },
       { property: "editors", idAttribute: "id", as: "persons" }
     ]
@@ -285,7 +285,7 @@ var nestedObjects = {
 
 var config = {
     wrapper: { singular : 'root' },
-    sideloading: [
+    sideloads: [
         { property : 'children', idAttribute : 'cid', as: 'children'},
         { property : 'children.grandchildren', idAttribute : 'gid', as: 'grandchildren'}
     ]
@@ -325,7 +325,7 @@ var employee = {
 
 var config = {
     wrapper: { singular: "employee", plural: "employees" },
-    sideloading: [
+    sideloads: [
         { property: "employer", idAttribute: "id", as: "employers" }
     ]
 };
@@ -364,7 +364,7 @@ var book = {
 var config = {
     rename: { property: "chapters", name: "chapterList" },
     wrapper: { singular: "book", plural: "books" },
-    sideloading: { property: "chapterList", idAttribute: "id", as: "chapters" }
+    sideloads: { property: "chapterList", idAttribute: "id", as: "chapters" }
 };
 
 var result = sideloadify(book, config);

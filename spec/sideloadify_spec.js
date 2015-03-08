@@ -13,7 +13,7 @@ describe("sideloadify", function (){
                 text : "two"
             }
         ]
-    }
+    };
 
     it("should correctly add main object name", function () {
         var result = sideloadify(testObject, {
@@ -34,7 +34,7 @@ describe("sideloadify", function (){
     it("should correctly move child objects to sideloads", function () {
         var result = sideloadify(testObject, {
             wrapper: { singular : 'wrapper', plural : 'WRONG' },
-            sideloading: [
+            sideloads: [
                 { property : 'foos', idAttribute : 'fid', as: 'sideloads'}
             ]
         });
@@ -60,7 +60,7 @@ describe("sideloadify", function (){
         };
         var spec = {
             wrapper: { singular: 'wrapper', plural: 'wrong'},
-            sideloading: { property: 'children', idAttribute: 'id', as: 'sideloads' }
+            sideloads: { property: 'children', idAttribute: 'id', as: 'sideloads' }
         };
         expect(sideloadify(testobject, spec)).toEqual({
             wrapper: { id : 1, children : [1] },
@@ -72,7 +72,7 @@ describe("sideloadify", function (){
     it("should wrap an empty array correctly", function () {
         var result = sideloadify([], {
             wrapper: { singular : 'WRONG', plural : 'wrapperArray' },
-            sideloading: [{ property : 'foos', idAttribute : 'fid', as: 'sideloads'}]
+            sideloads: [{ property : 'foos', idAttribute : 'fid', as: 'sideloads'}]
         });
         expect(result).toEqual({ wrapperArray: [] });
     });
@@ -84,8 +84,8 @@ describe("sideloadify", function (){
         };
         var opts = {
             wrapper: { singular : 'wrap', plural: 'WRONG' },
-            sideloading: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
-        }
+            sideloads: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
+        };
         expect(sideloadify(input, opts)).toEqual({
             wrap : {
                 id: 1,
@@ -100,8 +100,8 @@ describe("sideloadify", function (){
         };
         var opts = {
             wrapper: { singular : 'wrap', plural: 'WRONG' },
-            sideloading: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
-        }
+            sideloads: [ { property: 'children', idAttribute: 'id', as: 'sideloads'}]
+        };
         expect(sideloadify(input, opts)).toEqual({
             wrap : {
                 id: 1
@@ -157,7 +157,7 @@ describe("sideloadify", function (){
     it("should correctly move child objects to sideloads from array", function() {
         var result = sideloadify(testObjectArray, {
             wrapper: { singular : 'WRONG', plural : 'wrapperArray' },
-            sideloading: [
+            sideloads: [
                 { property : 'foos', idAttribute : 'fid', as: 'sideloads'}
             ]
         });
@@ -203,7 +203,7 @@ describe("sideloadify", function (){
     it("should correctly combine sideloads from different structures", function() {
         var result = sideloadify(testObject2, {
             wrapper: { singular : 'wrapper', plural : 'WRONG' },
-            sideloading: [
+            sideloads: [
                 { property : 'foosOne', idAttribute : 'fid', as: 'sideloads'},
                 { property : 'foosTwo', idAttribute : 'fid', as: 'sideloads'}
             ]
@@ -233,7 +233,7 @@ describe("sideloadify", function (){
     it("should handle nested objects correctly", function () {
         var result = sideloadify(nestedObjects, {
             wrapper: { singular : 'root', plural : 'WRONG' },
-            sideloading: [
+            sideloads: [
                 { property : 'children', idAttribute : 'cid', as: 'children'},
                 { property : 'children.grandchildren', idAttribute : 'gid', as: 'grandchildren'}
             ]
@@ -263,7 +263,7 @@ describe("sideloadify", function (){
         };
         var result = sideloadify(testObj, {
             wrapper: { singular : 'root', plural : 'WRONG' },
-            sideloading: [
+            sideloads: [
                 { property : 'child', idAttribute : 'id', as: 'children'},
             ]
         });
@@ -352,7 +352,7 @@ describe("sideloadify", function (){
         };
         var spec = {
             wrapper: { singular: 'wrapper'},
-            sideloading: {property: 'children', idAttribute: 'id', as: 'children'},
+            sideloads: {property: 'children', idAttribute: 'id', as: 'children'},
             delete: ['children.target']
         };
         expect(sideloadify(testObj, spec)).toEqual({
@@ -454,7 +454,7 @@ describe("sideloadify", function (){
             };
             var spec = {
                 wrapper: { singular: 'wrapper'},
-                sideloading: {property: 'children', idAttribute: 'id', as: 'children'},
+                sideloads: {property: 'children', idAttribute: 'id', as: 'children'},
                 rename: { property: "children.name", name: "renamed" },
             };
             expect(sideloadify(testObj, spec)).toEqual({
@@ -482,7 +482,7 @@ describe("sideloadify", function (){
         var spec = {
             rename: { property: "chapters", name: "chapterList" },
             wrapper: { singular: "book", plural: "books" },
-            sideloading: { property: "chapterList", idAttribute: "id", as: "chapters" }
+            sideloads: { property: "chapterList", idAttribute: "id", as: "chapters" }
         };
         expect(sideloadify(testObj, spec)).toEqual({
             "book": {
