@@ -12,7 +12,7 @@ var _ = require('lodash'),
  *         singular : 'book',
  *         plural : 'books'
  *     },
- *     sideloading: [
+ *     sideloads: [
  *         {
  *             property : 'metadata.authors',
  *             idAttribute : 'id',
@@ -33,11 +33,11 @@ var _ = require('lodash'),
  * @param {Object} options - the sideload properties
  * @param {string} options.wrapper.singular - the singular name of the property that will contain the main object
  * @param {string} options.wrapper.plural - the singular name of the property that will contain the main object array
- * @param {string} options.sideloading.property - the path to the property containing the target object or object array
+ * @param {string} options.sideloads.property - the path to the property containing the target object or object array
  *      to sideload.
- * @param {string} options.sideloading.idAttribute - the name of the attribute containing the unique identifier for
+ * @param {string} options.sideloads.idAttribute - the name of the attribute containing the unique identifier for
  *      the sideloaded objects
- * @param {string} [options.sideloading.as] - the name of the property containing the sideloaded object array. If
+ * @param {string} [options.sideloads.as] - the name of the property containing the sideloaded object array. If
  *      left unspecified, the objects will not be added to sideloading - only the reference ID or ID array is
  *      used to replace the nested object.
  * @returns {Object} sideloadified copy of target
@@ -53,7 +53,7 @@ module.exports = function sideloadify(target, options) {
     renameProps(inputAsArray, options.rename);
     mainPropertyName = (!inputIsArray) ? options.wrapper.singular : options.wrapper.plural;
     sideloadContainer = {};
-    sideloadSpecs = toArray(options.sideloading);
+    sideloadSpecs = toArray(options.sideloads);
     _.forEach(sideloadSpecs, function (sideloadOpts) {
         extractSingleSideload(inputAsArray, sideloadOpts, sideloadContainer);
     });
@@ -105,10 +105,10 @@ function extractSideloaded(fromJson, settings) {
 // Need to make sure the most deeply nested sideloads are extracted before less deeply nested. This
 // can be ensured by sorting sideload specs by the property path length
 function sortSideloads(spec) {
-    if (!_.isArray(spec.sideloading) || spec.sideloading.length <= 1) {
+    if (!_.isArray(spec.sideloads) || spec.sideloads.length <= 1) {
         return;
     }
-    spec.sideloading.sort(function (a, b) {
+    spec.sideloads.sort(function (a, b) {
         if (a.property.length > b.property.length) {
             return -1;
         } else if (a.property.length < b.property.length) {
