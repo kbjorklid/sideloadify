@@ -45,10 +45,12 @@ var _ = require('lodash'),
 module.exports = function sideloadify(target, options) {
     var inputClone, inputAsArray, sideloadContainer, results, mainPropertyName, inputIsArray, sideloadSpecs;
     sortSideloads(options);
+    sortRenames(options);
     inputIsArray = _.isArray(target);
     inputClone = _.cloneDeep(target);
     inputAsArray = toArray(inputClone);
     deleteProps(inputAsArray, options.delete);
+    renameProps(inputAsArray, options.rename);
     mainPropertyName = (!inputIsArray) ? options.wrapper.singular : options.wrapper.plural;
     sideloadContainer = {};
     sideloadSpecs = toArray(options.sideloading);
@@ -103,7 +105,7 @@ function extractSideloaded(fromJson, settings) {
 // Need to make sure the most deeply nested sideloads are extracted before less deeply nested. This
 // can be ensured by sorting sideload specs by the property path length
 function sortSideloads(spec) {
-    if (!spec.sideloading || !spec.sideloading.length || spec.sideloading.length <= 1) {
+    if (!_.isArray(spec.sideloading) || spec.sideloading.length <= 1) {
         return;
     }
     spec.sideloading.sort(function (a, b) {
@@ -116,13 +118,46 @@ function sortSideloads(spec) {
     });
 }
 
+
+function sortRenames(spec) {
+    if (!_.isArray(spec.rename) || spec.rename.length <= 1) {
+        return;
+    }
+    spec.rename.sort(function (a, b) {
+        if (a.property.length > b.property.length) {
+            return -1;
+        } else if (a.property.length < b.property.length) {
+            return 1;
+        }
+        return 0;
+    });
+}
+
+
 function deleteProps(targetArray, propsToDelete) {
     if (propsToDelete) {
         targetArray.forEach(function (target) {
             objectUtils.forEachProperty(target, propsToDelete, function (value, parent, lastPropertyName) {
                 delete parent[lastPropertyName];
-            })
+            });
         })
+    }
+}
+
+function renameProps(targetArray, renameSpecs) {
+    var renameSpecArray;
+    if (renameSpecs) {
+        renameSpecArray = toArray(renameSpecs);
+        targetArray.forEach(function(target) {
+            renameSpecArray.forEach(function (spec) {
+                objectUtils.forEachProperty(target, spec.property, function (value, parent, lastPropertyName) {
+                    if (parent.hasOwnProperty(lastPropertyName)) {
+                        parent[spec.name] = parent[lastPropertyName];
+                        delete parent[lastPropertyName];
+                    }
+                });
+            });
+        });
     }
 }
 
