@@ -29,10 +29,13 @@ var result = sideloadify(target, config);
   * The value of the ```singular``` property is used if the root is an object
   * The value of the ```plural``` property is used if the root is an array
 * ```sideloading``` (optional) is an array of definitions (or a single definition) for how to extract inline objects and wrap them as sideloads.
-  * ```property``` defines the name of the property of the sideload array. This may be a property path, e.g. ```user.roles```.
+  * ```property``` defines the [property path](#property-paths) the target to sideload.
   * ```idAttribute``` contains the name of the id of the inline object. The value of this attribute will replace the inline object.
   * ```as``` (optional)  defines the name of the property of the sideload array. If left undefined, the sideloads will not be added (only replace the inline objects with IDs).
 * ```delete``` (optional) is an array or a single string specifying the property path or property paths which should be deleted from the original object before other processing takes place.
+* ```rename``` (optional) is an array or a single object specifying which property or properties should be renamed
+  * ```property``` defines the property path of the property to rename.
+  * ```name``` defines the new name for the property.
 
 ### Property paths
 The property paths refer to a notation to identify the properties. See examples below
@@ -53,6 +56,15 @@ some of the property paths and their respective values would be:
 * ```metadata.publisher``` : ```"Acme Co."```
 * ```chapters.title``` : ```["First chapter", "Second chapter"]```
 
+## Execution order
+The execution order of the different operations is as follows:
+1. delete
+2. rename
+3. move sideloads
+
+You must take this into account if you need to rename the sideload array. See the
+[Rename and sideload](#rename-and-sideload) example.
+
 
 ## Examples
 
@@ -60,7 +72,7 @@ some of the property paths and their respective values would be:
 
 ```javascript
 var book = {
-  "id": 1
+  "id": 1,
   "title": "Foo",
   "chapters": [
      { "id" : 1, "title": "First chapter" },
@@ -332,6 +344,44 @@ result:
     },
     "employers": [
        { "id" : 1, "name": "Night's Watch" }
+    ]
+}
+```
+
+### Rename and sideload
+Note that rename operations take place before extracting the sideloads, demonstrated by the following example:
+
+```javascript
+var book = {
+  "id": 1,
+  "title": "Foo",
+  "chapters": [
+     { "id" : 1, "title": "First chapter" },
+     { "id" : 2, "title": "Second chapter" }
+  ]
+};
+
+var config = {
+    rename: { property: "chapters", name: "chapterList" },
+    wrapper: { singular: "book", plural: "books" },
+    sideloading: { property: "chapterList", idAttribute: "id", as: "chapters" }
+};
+
+var result = sideloadify(book, config);
+```
+
+result:
+
+```javascript
+{
+    "book": {
+        "id": 1,
+        "title": "Foo",
+        "chapterList": [1, 2]
+    },
+    "chapters": [
+       { "id" : 1, "title": "First chapter" },
+       { "id" : 2, "title": "Second chapter" }
     ]
 }
 ```

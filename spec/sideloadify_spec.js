@@ -367,6 +367,23 @@ describe("sideloadify", function (){
         })
     });
 
+    it("should delete properties within array root", function() {
+        var testArr = [
+            { id: 1, target: "foo" },
+            { id: 2, target: "bar" }
+        ];
+        var spec = {
+            wrapper: { plural: 'wrapper'},
+            delete: ['target']
+        };
+        expect(sideloadify(testArr, spec)).toEqual({
+            wrapper: [
+                { id: 1 },
+                { id: 2 }
+            ]
+        });
+    });
+
     it("should ignore non-existent properties when deleting", function () {
         var testObj = {
             id: 1,
@@ -382,6 +399,101 @@ describe("sideloadify", function (){
                 name: "foo"
             }
         });
+    });
 
+
+    it("should successfully rename simple property on single root", function () {
+        var testObj = {
+            id: 1,
+            foo: "foo"
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper' },
+            rename: { property: "foo", name: "bar" }
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                bar: "foo"
+            }
+        })
+    });
+
+    it("should successfully rename two properties nested one inside other", function () {
+        var testObj = {
+            id: 1,
+            foo: {
+                bar: "bar"
+            }
+        };
+        var spec = {
+            wrapper: { singular: 'wrapper' },
+            rename: [
+                { property: "foo", name: "foo2" },
+                { property: "foo.bar", name: "bar2" }
+            ]
+
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            wrapper: {
+                id: 1,
+                foo2: {
+                    bar2: "bar"
+                }
+            }
+        })
+    });
+
+    it("should successfully rename before sideloading", function() {
+            var testObj = {
+                id : 1,
+                children: [
+                    { id: 1, name: "child 1"},
+                    { id: 2, name: "child 2"}
+                ]
+            };
+            var spec = {
+                wrapper: { singular: 'wrapper'},
+                sideloading: {property: 'children', idAttribute: 'id', as: 'children'},
+                rename: { property: "children.name", name: "renamed" },
+            };
+            expect(sideloadify(testObj, spec)).toEqual({
+                wrapper: {
+                    id: 1,
+                    children: [1, 2]
+                },
+                children: [
+                    { id: 1, renamed: "child 1"},
+                    { id: 2, renamed: "child 2"}
+                ]
+            });
+
+        });
+
+    it("should successfully sideload when sideload property is renamed", function() {
+        var testObj = {
+            "id": 1,
+            "title": "Foo",
+            "chapters": [
+                { "id" : 1, "title": "First chapter" },
+                { "id" : 2, "title": "Second chapter" }
+            ]
+        };
+        var spec = {
+            rename: { property: "chapters", name: "chapterList" },
+            wrapper: { singular: "book", plural: "books" },
+            sideloading: { property: "chapterList", idAttribute: "id", as: "chapters" }
+        };
+        expect(sideloadify(testObj, spec)).toEqual({
+            "book": {
+                "id": 1,
+                "title": "Foo",
+                "chapterList": [1, 2]
+            },
+            "chapters": [
+                { "id" : 1, "title": "First chapter" },
+                { "id" : 2, "title": "Second chapter" }
+            ]
+        });
     });
 });
